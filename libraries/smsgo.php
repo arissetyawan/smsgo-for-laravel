@@ -130,14 +130,13 @@ class Smsgo {
 	 * @param   string
 	 * @return  mixed
 	 */
-	public function message($msg)
+	public function message($msg = NULL)
 	{
-		if ( ! $msg or strlen(trim($msg)) === 0)
+		if ( ! is_null($msg) and strlen(trim($msg)) > 0)
 		{
-			throw new SmsgoException('Message is empty');
+			$this->msg = $msg;
 		}
 		
-		$this->msg = $msg;
 		return $this;
 	}
 	
@@ -181,7 +180,7 @@ class Smsgo {
 	
 	public function to($to = NULL)
 	{
-		if ( ! is_null($to) and strlen(trim($to)) > 0)
+		if ( ! is_null($to))
 		{
 			if (is_array($to))
 			{
@@ -190,10 +189,11 @@ class Smsgo {
 					return $this->to($number);
 				}
 			}
-
-			if ( ! in_array($to, $this->to))
+			
+			$to = trim(preg_replace('/[^0-9]/', '', $to));
+			
+			if ( ! in_array($to, $this->to) and strlen($to) > 0)
 			{
-				$to = preg_replace('/[^0-9]/', '', $to);
 				$this->to[] = $to;
 			}
 		}
@@ -255,7 +255,7 @@ class Smsgo {
 				'ReceiverList'		=> $to,
 				'CallbackPhoneNo'	=> $this->from,
 				'MessageType'		=> 'S',
-				'SendMsg'			=> Helper::to_euckr($this->msg),
+				'SendMsg'			=> $this->msg,
 				'Subject'			=> '',
 				'ReservedChk'		=> '0',
 				'ResDate'			=> '',
@@ -269,9 +269,9 @@ class Smsgo {
 		curl_setopt($curl, CURLOPT_HTTPHEADER, array('Referer: ' . Config::get('application.url')));
 		curl_setopt($curl, CURLOPT_POST, TRUE);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
-	    curl_setopt($curl, CURLOPT_URL, Config::get('smsgo.url'));
-	    $res = curl_exec($curl);
-	    curl_close ($curl);
+		curl_setopt($curl, CURLOPT_URL, Config::get('smsgo.url'));
+		$res = curl_exec($curl);
+		curl_close ($curl);
 	
 		if (preg_match("/<ReturnCode>(.*?)<\/ReturnCode>/is", $res, $match))
 		{
