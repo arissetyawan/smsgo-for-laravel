@@ -249,19 +249,19 @@ class Smsgo {
 	protected function _send($to)
 	{
 		$params = array(
-				'SUserID'			=> Config::get('smsgo.user_id'),
-				'ServiceAC'			=> Config::get('smsgo.application_key'),
-				'ReturnURL'			=> 'XML',
-				'ReceiverList'		=> $to,
-				'CallbackPhoneNo'	=> $this->from,
-				'MessageType'		=> 'S',
-				'SendMsg'			=> $this->msg,
-				'Subject'			=> '',
-				'ReservedChk'		=> '0',
-				'ResDate'			=> '',
-				'UserData1'			=> '',
-				'UserData2'			=> '',
-				'UserData3'			=> ''
+				'SUserID' => Config::get('smsgo.user_id'),
+				'ServiceAC' => Config::get('smsgo.application_key'),
+				'ReturnURL' => 'XML',
+				'ReceiverList' => $to,
+				'CallbackPhoneNo' => $this->from,
+				'MessageType' => 'S',
+				'SendMsg' => $this->msg,
+				'Subject' => '',
+				'ReservedChk' => '0',
+				'ResDate' => '',
+				'UserData1' => '',
+				'UserData2' => '',
+				'UserData3' => ''
 			);
 			
 		$curl = curl_init();
